@@ -40,6 +40,7 @@ export class UserComponent implements OnInit {
   userId: string | null = null;
   user: User | null = null;
   userForm!: FormGroup;
+  hasValidToken = false;
   private router: Router = inject(Router);
   private route = inject(ActivatedRoute);
   private dialog: MatDialog = inject(MatDialog);
@@ -57,7 +58,11 @@ export class UserComponent implements OnInit {
       this.usersService.getUser(this.userId).subscribe({
         next: (response) => {
           this.user = response;
+          this.hasValidToken = true;
           this.populateForm(this.user);
+        },
+        error: () => {
+          this.hasValidToken = false;
         },
       });
     }
