@@ -75,6 +75,8 @@ update_file() {
 
   # Replace the app version line in the file
   sed -i "s/^appVersion: .*/appVersion: \"${new_version}\"/" "${file_path}"
+  # Replace the version line the file
+  sed -i "s/^version: .*/version: ${new_version}/" "${file_path}"
 
   git add "${file_path}"
   git commit -m "chore(${project_name}): update app version to version ${new_version}"

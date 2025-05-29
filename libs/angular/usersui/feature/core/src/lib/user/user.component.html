@@ -4,6 +4,7 @@
       <h1 data-cy="title">Account</h1>
       <button
         (click)="editAccount()"
+        [disabled]="!hasValidToken"
         color="warn"
         data-cy="edit-account-button"
         mat-raised-button
@@ -13,6 +14,7 @@
       </button>
       <button
         (click)="deleteUser()"
+        [disabled]="!hasValidToken"
         color="error"
         data-cy="delete-account-button"
         mat-raised-button
@@ -67,6 +69,7 @@
       @if (user?.profile) {
         <button
           (click)="editProfile()"
+          [disabled]="!hasValidToken"
           color="warn"
           data-cy="edit-profile-button"
           mat-raised-button
@@ -76,6 +79,7 @@
         </button>
         <button
           (click)="deleteProfile()"
+          [disabled]="!hasValidToken"
           color="error"
           data-cy="delete-profile-button"
           mat-raised-button
@@ -86,6 +90,7 @@
       } @else {
         <button
           (click)="addProfile()"
+          [disabled]="!hasValidToken"
           color="success"
           data-cy="add-profile-button"
           mat-raised-button
@@ -145,6 +150,7 @@
         @if (userForm.get('profile')?.get('icon')?.value) {
           <button
             (click)="editIcon()"
+            [disabled]="!hasValidToken"
             color="warn"
             data-cy="edit-icon-button"
             mat-raised-button
@@ -154,6 +160,7 @@
           </button>
           <button
             (click)="deleteIcon()"
+            [disabled]="!hasValidToken"
             color="error"
             data-cy="delete-icon-button"
             mat-raised-button
@@ -164,6 +171,7 @@
         } @else if (user?.profile) {
           <button
             (click)="addIcon()"
+            [disabled]="!hasValidToken"
             color="success"
             data-cy="add-icon-button"
             mat-raised-button
@@ -192,6 +200,7 @@
         @if (user?.profile) {
           <button
             (click)="addAddress()"
+            [disabled]="!hasValidToken"
             color="success"
             data-cy="add-address-button"
             mat-raised-button
@@ -211,6 +220,7 @@
               <h3 [attr.data-cy]="'address-title-' + i">Address {{ i + 1 }}</h3>
               <button
                 (click)="editAddress(i)"
+                [disabled]="!hasValidToken"
                 [attr.data-cy]="'edit-address-button-' + i"
                 color="warn"
                 mat-raised-button
@@ -222,6 +232,7 @@
               </button>
               <button
                 (click)="deleteAddress(i)"
+                [disabled]="!hasValidToken"
                 [attr.data-cy]="'delete-address-button-' + i"
                 color="error"
                 mat-raised-button
