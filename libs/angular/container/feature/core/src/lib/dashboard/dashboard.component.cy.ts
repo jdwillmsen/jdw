@@ -5,10 +5,7 @@ import { provideHttpClient } from '@angular/common/http';
 import { provideHttpClientTesting } from '@angular/common/http/testing';
 import { ENVIRONMENT } from '@jdw/angular-shared-util';
 import { Observable, of } from 'rxjs';
-import {
-  MicroFrontendRoute,
-  NavigationItem,
-} from '@jdw/angular-container-util';
+import { NavigationItem } from '@jdw/angular-container-util';
 import { MicroFrontendService } from '@jdw/angular-container-data-access';
 
 const mockMicroFrontendService = {
