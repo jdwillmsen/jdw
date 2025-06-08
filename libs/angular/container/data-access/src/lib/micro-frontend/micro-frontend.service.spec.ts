@@ -1,7 +1,6 @@
 import { TestBed } from '@angular/core/testing';
 
 import { MicroFrontendService } from './micro-frontend.service';
-import { MicroFrontendRoute } from '@jdw/angular-container-util';
 import { HttpErrorResponse, provideHttpClient } from '@angular/common/http';
 import {
   HttpTestingController,
@@ -17,27 +16,6 @@ const mockSnackbarService = {
 const mockEnvironment = {
   SERVICE_DISCOVERY_BASE_URL: 'http://localhost:9000',
 };
-
-const mockRoutes: MicroFrontendRoute[] = [
-  {
-    path: 'home',
-    remoteName: 'home',
-    moduleName: 'HomeModule',
-    url: '',
-    icon: '',
-    title: 'Home',
-    description: 'Home page',
-  },
-  {
-    path: 'about',
-    remoteName: 'about',
-    moduleName: 'AboutModule',
-    url: '',
-    icon: '',
-    title: 'About',
-    description: 'About page',
-  },
-];
 
 jest.mock('@jdw/angular-shared-util', () => ({
   ...jest.requireActual('@jdw/angular-shared-util'),
@@ -70,39 +48,131 @@ describe('MicroFrontendService', () => {
     expect(service).toBeTruthy();
   });
 
-  describe('getRoutes', () => {
-    it('should make an HTTP GET request and return an array of routes', (done) => {
-      service.getRoutes().subscribe((routes) => {
-        expect(routes).toEqual(mockRoutes);
+  describe('getRouteRemotes', () => {
+    it('should return expected route remotes', (done) => {
+      const mockData = [
+        {
+          path: 'users',
+          name: 'usersui',
+          id: 'usersui/Routes',
+          entry: 'http://localhost:4202/mf-manifest.json',
+        },
+      ];
+
+      service.getRouteRemotes().subscribe((data) => {
+        expect(data).toEqual(mockData);
         done();
       });
 
       const req = httpTesting.expectOne(
-        `${mockEnvironment.SERVICE_DISCOVERY_BASE_URL}/api/micro-frontends`,
+        `${mockEnvironment.SERVICE_DISCOVERY_BASE_URL}/api/route-remotes`,
       );
       expect(req.request.method).toBe('GET');
-      req.flush(mockRoutes);
+      req.flush(mockData);
     });
 
-    it('should call handleError and return an empty array on error', (done) => {
-      const errorResponse = new HttpErrorResponse({
-        error: 'Error message',
-        status: 500,
-        statusText: 'Server Error',
-        url: `${mockEnvironment.SERVICE_DISCOVERY_BASE_URL}/api/micro-frontends`,
-      });
-      jest.spyOn(service, 'handleError');
+    it('should handle error and return empty array', (done) => {
+      (getErrorMessage as jest.Mock).mockReturnValue('Network error');
 
-      service.getRoutes().subscribe((routes) => {
-        expect(routes).toEqual([]);
-        expect(service.handleError).toHaveBeenCalledWith(errorResponse);
+      service.getRouteRemotes().subscribe((data) => {
+        expect(data).toEqual([]);
+        expect(mockSnackbarService.error).toHaveBeenCalledWith(
+          'Network error',
+          { variant: 'filled', autoClose: false },
+          true,
+        );
         done();
       });
 
       const req = httpTesting.expectOne(
-        `${mockEnvironment.SERVICE_DISCOVERY_BASE_URL}/api/micro-frontends`,
+        `${mockEnvironment.SERVICE_DISCOVERY_BASE_URL}/api/route-remotes`,
       );
-      req.flush('Error message', { status: 500, statusText: 'Server Error' });
+      req.flush('Error occurred', { status: 500, statusText: 'Server Error' });
+    });
+  });
+
+  describe('getComponentRemotes', () => {
+    it('should return expected component remotes', (done) => {
+      const mockData = [
+        {
+          name: 'authui',
+          id: 'authui/AuthWidget',
+          entry: 'http://localhost:4201/mf-manifest.json',
+        },
+      ];
+
+      service.getComponentRemotes().subscribe((data) => {
+        expect(data).toEqual(mockData);
+        done();
+      });
+
+      const req = httpTesting.expectOne(
+        `${mockEnvironment.SERVICE_DISCOVERY_BASE_URL}/api/component-remotes`,
+      );
+      expect(req.request.method).toBe('GET');
+      req.flush(mockData);
+    });
+
+    it('should handle error and return empty array', (done) => {
+      (getErrorMessage as jest.Mock).mockReturnValue('Component fetch failed');
+
+      service.getComponentRemotes().subscribe((data) => {
+        expect(data).toEqual([]);
+        expect(mockSnackbarService.error).toHaveBeenCalledWith(
+          'Component fetch failed',
+          { variant: 'filled', autoClose: false },
+          true,
+        );
+        done();
+      });
+
+      const req = httpTesting.expectOne(
+        `${mockEnvironment.SERVICE_DISCOVERY_BASE_URL}/api/component-remotes`,
+      );
+      req.flush('Failed', { status: 500, statusText: 'Server Error' });
+    });
+  });
+
+  describe('getNavigationItems', () => {
+    it('should return expected navigation items', (done) => {
+      const mockData = [
+        {
+          path: 'roles',
+          icon: 'lock',
+          title: 'Roles',
+          description: 'This contains viewing and managing roles functionality',
+        },
+      ];
+
+      service.getNavigationItems().subscribe((data) => {
+        expect(data).toEqual(mockData);
+        done();
+      });
+
+      const req = httpTesting.expectOne(
+        `${mockEnvironment.SERVICE_DISCOVERY_BASE_URL}/api/navigation-items`,
+      );
+      expect(req.request.method).toBe('GET');
+      req.flush(mockData);
+    });
+
+    it('should handle error and return empty array', (done) => {
+      (getErrorMessage as jest.Mock).mockReturnValue('Navigation error');
+
+      service.getNavigationItems().subscribe((data) => {
+        expect(data).toEqual([]);
+        expect(mockSnackbarService.error).toHaveBeenCalledWith(
+          'Navigation error',
+          { variant: 'filled', autoClose: false },
+          true,
+        );
+        done();
+      });
+
+      const req = httpTesting.expectOne(
+        `${mockEnvironment.SERVICE_DISCOVERY_BASE_URL}/api/navigation-items`,
+      );
+      req.flush('Error', { status: 404, statusText: 'Not Found' });
     });
   });
 

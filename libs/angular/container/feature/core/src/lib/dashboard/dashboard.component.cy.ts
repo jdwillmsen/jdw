@@ -5,32 +5,30 @@ import { provideHttpClient } from '@angular/common/http';
 import { provideHttpClientTesting } from '@angular/common/http/testing';
 import { ENVIRONMENT } from '@jdw/angular-shared-util';
 import { Observable, of } from 'rxjs';
-import { MicroFrontendRoute } from '@jdw/angular-container-util';
+import { NavigationItem } from '@jdw/angular-container-util';
 import { MicroFrontendService } from '@jdw/angular-container-data-access';
 
 const mockMicroFrontendService = {
-  getRoutes: (): Observable<MicroFrontendRoute[]> => {
+  getNavigationItems: (): Observable<NavigationItem[]> => {
     return of([
       {
-        name: 'authui',
         path: 'auth',
-        remoteName: 'authui',
-        moduleName: './Routes',
-        url: 'http://localhost:4201',
         icon: 'login',
         title: 'Auth',
         description: 'This contains sign in and sign up functionality',
       },
       {
-        name: 'usersui',
         path: 'users',
-        remoteName: 'usersui',
-        moduleName: './Routes',
-        url: 'http://localhost:4202',
         icon: 'groups',
         title: 'Users',
         description:
           'This contains viewing users and managing profiles functionality',
+      },
+      {
+        path: 'roles',
+        icon: 'lock',
+        title: 'Roles',
+        description: 'This contains viewing and managing roles functionality',
       },
     ]);
   },
@@ -57,6 +55,7 @@ describe(DashboardComponent.name, () => {
   it('renders', () => {
     cy.mount(DashboardComponent);
   });
+
   describe('Screen Sizes', () => {
     testScreenSize('XSmall', 400, 400);
     testScreenSize('Small', 800, 800);
@@ -87,6 +86,22 @@ function testScreenSize(size: string, width: number, height: number) {
           'contain.text',
           'This contains viewing users and managing profiles functionality',
         );
+    });
+
+    it(`should display no apps correctly on ${size} screen size`, () => {
+      TestBed.configureTestingModule({
+        providers: [
+          {
+            provide: MicroFrontendService,
+            useValue: {
+              getNavigationItems: (): Observable<NavigationItem[]> => of([]),
+            },
+          },
+        ],
+      });
+      cy.mount(DashboardComponent);
+      cy.getByCy('title').should('be.visible').and('contain.text', 'Apps');
+      cy.contains('No apps available');
     });
   });
 }

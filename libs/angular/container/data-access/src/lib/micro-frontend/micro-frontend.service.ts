@@ -6,7 +6,11 @@ import {
   getErrorMessage,
 } from '@jdw/angular-shared-util';
 import { catchError, Observable, of } from 'rxjs';
-import { MicroFrontendRoute } from '@jdw/angular-container-util';
+import {
+  ComponentRemote,
+  NavigationItem,
+  RouteRemote,
+} from '@jdw/angular-container-util';
 import { SnackbarService } from '@jdw/angular-shared-data-access';
 
 @Injectable({
@@ -17,11 +21,27 @@ export class MicroFrontendService {
   private environment: Environment = inject(ENVIRONMENT);
   private snackbarService: SnackbarService = inject(SnackbarService);
 
-  getRoutes(): Observable<MicroFrontendRoute[]> {
+  getRouteRemotes(): Observable<RouteRemote[]> {
     return this.http
       .get<
-        MicroFrontendRoute[]
-      >(`${this.environment.SERVICE_DISCOVERY_BASE_URL}/api/micro-frontends`)
+        RouteRemote[]
+      >(`${this.environment.SERVICE_DISCOVERY_BASE_URL}/api/route-remotes`)
+      .pipe(catchError((error) => this.handleError(error)));
+  }
+
+  getComponentRemotes(): Observable<ComponentRemote[]> {
+    return this.http
+      .get<
+        ComponentRemote[]
+      >(`${this.environment.SERVICE_DISCOVERY_BASE_URL}/api/component-remotes`)
+      .pipe(catchError((error) => this.handleError(error)));
+  }
+
+  getNavigationItems(): Observable<NavigationItem[]> {
+    return this.http
+      .get<
+        NavigationItem[]
+      >(`${this.environment.SERVICE_DISCOVERY_BASE_URL}/api/navigation-items`)
       .pipe(catchError((error) => this.handleError(error)));
   }
 

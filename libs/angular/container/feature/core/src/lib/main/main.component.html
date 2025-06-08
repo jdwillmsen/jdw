@@ -7,12 +7,22 @@
   [isXSmallScreen]="isXSmallScreen"
 >
   <div class="header-row">
-    <button mat-flat-button color="accent">
-      {{ currentVersion }}
-    </button>
-    <button mat-flat-button color="accent">
-      {{ currentEnv | uppercase }}
-    </button>
+    @if (!isXSmallScreen) {
+      <div class="extra-row">
+        <button mat-flat-button color="accent" matTooltip="Version">
+          v{{ currentVersion }}
+        </button>
+        <button mat-flat-button color="accent" matTooltip="Environment">
+          {{ currentEnv | uppercase }}
+        </button>
+      </div>
+    }
+
+    <div class="widget-row">
+      @for (cmp of headerWidgets; track cmp) {
+        <div *ngComponentOutlet="cmp"></div>
+      }
+    </div>
   </div>
 </jdw-header>
 <jdw-navigation-layout

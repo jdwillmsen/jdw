@@ -1,7 +1,7 @@
 import { inject, Injectable } from '@angular/core';
 import { Route, Router } from '@angular/router';
 import { MicroFrontendService } from '../micro-frontend/micro-frontend.service';
-import { loadRemoteModule, setRemoteDefinitions } from '@nx/angular/mf';
+import { loadRemote, init } from '@module-federation/enhanced/runtime';
 /* eslint-disable @nx/enforce-module-boundaries */
 import { FallbackComponent } from '@jdw/angular-shared-ui';
 /* eslint-enable @nx/enforce-module-boundaries */
@@ -15,14 +15,12 @@ export class DynamicRouteLoaderService {
 
   loadRoutes(): Promise<void> {
     return new Promise((resolve) => {
-      this.mfService.getRoutes().subscribe((routes) => {
-        const definitions: Record<string, string> = {};
-        const dynamicRoutes: Route[] = routes.map((route) => {
-          definitions[route.remoteName] = route.url;
+      this.mfService.getRouteRemotes().subscribe((remotes) => {
+        const dynamicRoutes: Route[] = remotes.map((remote) => {
           return {
-            path: route.path,
+            path: remote.path,
             loadChildren: () =>
-              loadRemoteModule(route.remoteName, route.moduleName)
+              loadRemote<any>(remote.id)
                 .then((m) => m.remoteRoutes)
                 .catch((err) => {
                   console.error('Failed to load remote', err);
@@ -34,7 +32,10 @@ export class DynamicRouteLoaderService {
           path: '**',
           redirectTo: '',
         });
-        setRemoteDefinitions(definitions);
+        init({
+          name: 'container',
+          remotes: remotes,
+        });
         this.router.resetConfig([...this.router.config, ...dynamicRoutes]);
         resolve();
       });
