@@ -9,10 +9,7 @@
     @if (doesIconExist) {
       <mat-icon class="sign-in-icon" data-cy="sign-in-icon" />
       <img
-        [src]="
-            'data:image/png;base64,' +
-            user?.profile?.icon?.icon
-          "
+        [src]="'data:image/png;base64,' + user?.profile?.icon?.icon"
         alt="Account Icon"
         data-cy="icon-image"
         class="avatar"
