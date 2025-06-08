@@ -66,37 +66,48 @@ mappings for the microfrontends and their respective URLs and metadata. Below is
 
 ```
 {
-  "remotes": {
-    "authui": "http://localhost:4201",
-    "usersui": "http://localhost:4202"
-  },
-  "microFrontends": [
+  "routeRemotes": [
     {
-      "name": "authui",
       "path": "auth",
-      "remoteName": "authui",
-      "moduleName": "./Routes",
-      "url": "http://localhost:4201",
+      "name": "authui",
+      "id": "authui/Routes",
+      "entry": "http://localhost:4201/mf-manifest.json"
+    },
+    {
+      "path": "users",
+      "name": "usersui",
+      "id": "usersui/Routes",
+      "entry": "http://localhost:4202/mf-manifest.json"
+    },
+    {
+      "path": "roles",
+      "name": "rolesui",
+      "id": "rolesui/Routes",
+      "entry": "http://localhost:4203/mf-manifest.json"
+    }
+  ],
+  "componentRemotes": [
+    {
+      "name": "AuthWidgetComponent",
+      "id": "authui/AuthWidget",
+      "entry": "http://localhost:4201/mf-manifest.json"
+    }
+  ],
+  "navigationItems": [
+    {
+      "path": "auth",
       "icon": "login",
       "title": "Auth",
       "description": "This contains sign in and sign up functionality"
     },
     {
-      "name": "usersui",
       "path": "users",
-      "remoteName": "usersui",
-      "moduleName": "./Routes",
-      "url": "http://localhost:4202",
       "icon": "groups",
       "title": "Users",
       "description": "This contains viewing users and managing profiles functionality"
     },
     {
-      "name": "rolesui",
       "path": "roles",
-      "remoteName": "rolesui",
-      "moduleName": "./Routes",
-      "url": "http://localhost:4203",
       "icon": "lock",
       "title": "Roles",
       "description": "This contains viewing and managing roles functionality"
