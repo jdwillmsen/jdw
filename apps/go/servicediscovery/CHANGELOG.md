@@ -2,6 +2,17 @@
 
 This file was generated using [@jscutlery/semver](https://github.com/jscutlery/semver).
 
+## [1.0.0](https://github.com/jdwillmsen/jdw/compare/servicediscovery-0.4.0...servicediscovery-1.0.0) (2025-06-08)
+
+
+### ⚠ BREAKING CHANGES
+
+* **servicediscovery:** add new config style for component and route remotes
+
+### Features
+
+* **servicediscovery:** add new config style for component and route remotes ([e458ff2](https://github.com/jdwillmsen/jdw/commit/e458ff2fabefc6a5b815ee28621570b2522fbd20))
+
 ## [0.4.0](https://github.com/jdwillmsen/jdw/compare/servicediscovery-0.3.1...servicediscovery-0.4.0) (2025-04-10)
 
 
