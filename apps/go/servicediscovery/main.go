@@ -15,20 +15,30 @@ import (
 	"time"
 )
 
-type MicroFrontend struct {
-	Name        string `json:"name"`
+type RouteRemote struct {
+	Path  string `json:"path"`
+	Name  string `json:"name"`
+	ID    string `json:"id"`
+	Entry string `json:"entry"`
+}
+
+type ComponentRemote struct {
+	Name  string `json:"name"`
+	ID    string `json:"id"`
+	Entry string `json:"entry"`
+}
+
+type NavigationItem struct {
 	Path        string `json:"path"`
-	RemoteName  string `json:"remoteName"`
-	ModuleName  string `json:"moduleName"`
-	URL         string `json:"url"`
 	Icon        string `json:"icon"`
 	Title       string `json:"title"`
 	Description string `json:"description"`
 }
 
 type Config struct {
-	Remotes        map[string]string `json:"remotes"`
-	MicroFrontends []MicroFrontend   `json:"microFrontends"`
+	RouteRemotes     []RouteRemote     `json:"routeRemotes"`
+	ComponentRemotes []ComponentRemote `json:"componentRemotes"`
+	NavigationItems  []NavigationItem  `json:"navigationItems"`
 }
 
 var config Config
@@ -59,14 +69,6 @@ func healthHandler(w http.ResponseWriter, _ *http.Request) {
 	}
 }
 
-func remotesHandler(w http.ResponseWriter, _ *http.Request) {
-	w.Header().Set("Content-Type", "application/json")
-	err := json.NewEncoder(w).Encode(config.Remotes)
-	if err != nil {
-		return
-	}
-}
-
 func versionHandler(envGetter envGetter) http.HandlerFunc {
 	return func(w http.ResponseWriter, r *http.Request) {
 		version := envGetter.getEnvOrDefault("SD_VERSION", "local")
@@ -79,11 +81,27 @@ func versionHandler(envGetter envGetter) http.HandlerFunc {
 	}
 }
 
-func microFrontendsHandler(w http.ResponseWriter, _ *http.Request) {
+func routeRemotesHandler(w http.ResponseWriter, _ *http.Request) {
 	w.Header().Set("Content-Type", "application/json")
-	err := json.NewEncoder(w).Encode(config.MicroFrontends)
+	err := json.NewEncoder(w).Encode(config.RouteRemotes)
 	if err != nil {
-		http.Error(w, "Unable to fetch micro frontends", http.StatusInternalServerError)
+		http.Error(w, "Unable to fetch route remotes", http.StatusInternalServerError)
+	}
+}
+
+func navigationItemsHandler(w http.ResponseWriter, _ *http.Request) {
+	w.Header().Set("Content-Type", "application/json")
+	err := json.NewEncoder(w).Encode(config.NavigationItems)
+	if err != nil {
+		http.Error(w, "Unable to fetch navigation items", http.StatusInternalServerError)
+	}
+}
+
+func componentRemotesHandler(w http.ResponseWriter, _ *http.Request) {
+	w.Header().Set("Content-Type", "application/json")
+	err := json.NewEncoder(w).Encode(config.ComponentRemotes)
+	if err != nil {
+		http.Error(w, "Unable to fetch component remotes", http.StatusInternalServerError)
 	}
 }
 
@@ -123,8 +141,9 @@ func registerRoutes(router *http.ServeMux, envGetter envGetter) {
 	router.HandleFunc("GET /", rootHandler)
 	router.HandleFunc("GET /health", healthHandler)
 	router.HandleFunc("GET /version", versionHandler(envGetter))
-	router.HandleFunc("GET /api/remotes", remotesHandler)
-	router.HandleFunc("GET /api/micro-frontends", microFrontendsHandler)
+	router.HandleFunc("GET /api/route-remotes", routeRemotesHandler)
+	router.HandleFunc("GET /api/component-remotes", componentRemotesHandler)
+	router.HandleFunc("GET /api/navigation-items", navigationItemsHandler)
 }
 
 func main() {

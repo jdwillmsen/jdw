@@ -56,84 +56,89 @@ func TestHealthHandler(t *testing.T) {
 	}
 }
 
-func TestRemotesHandler(t *testing.T) {
-	// Setup default config for the test
-	config.Remotes = map[string]string{"key": "value"}
-
-	req := httptest.NewRequest(http.MethodGet, "/api/remotes", nil)
-	w := httptest.NewRecorder()
-
-	remotesHandler(w, req)
-
-	if status := w.Code; status != http.StatusOK {
-		t.Errorf("remotesHandler returned wrong status code: got %v want %v", status, http.StatusOK)
-	}
-
-	var resp map[string]string
-	if err := json.NewDecoder(w.Body).Decode(&resp); err != nil {
-		t.Errorf("remotesHandler returned invalid JSON: %v", err)
-	}
-
-	expected := map[string]string{"key": "value"}
-	if resp["key"] != expected["key"] {
-		t.Errorf("remotesHandler returned unexpected body: got %v want %v", resp, expected)
-	}
-}
-
-func TestRemotesHandlerEmpty(t *testing.T) {
-	// Test with empty remotes
-	config.Remotes = map[string]string{}
-
-	req := httptest.NewRequest(http.MethodGet, "/api/remotes", nil)
-	w := httptest.NewRecorder()
-
-	remotesHandler(w, req)
-
-	if status := w.Code; status != http.StatusOK {
-		t.Errorf("remotesHandler returned wrong status code: got %v want %v", status, http.StatusOK)
-	}
-
-	var resp map[string]string
-	if err := json.NewDecoder(w.Body).Decode(&resp); err != nil {
-		t.Errorf("remotesHandler returned invalid JSON: %v", err)
-	}
-
-	if len(resp) != 0 {
-		t.Errorf("remotesHandler returned unexpected body: got %v want empty", resp)
-	}
-}
-
-func TestMicroFrontendsHandler(t *testing.T) {
-	// Setup default config for the test
-	config.MicroFrontends = []MicroFrontend{
+func TestRouteRemotesHandler(t *testing.T) {
+	config.RouteRemotes = []RouteRemote{
 		{
-			Name:        "example",
-			Path:        "/example",
-			RemoteName:  "exampleRemote",
-			ModuleName:  "ExampleModule",
-			URL:         "http://example.com",
-			Icon:        "icon.png",
-			Title:       "Example",
-			Description: "An example micro frontend",
+			Path:  "auth",
+			Name:  "authui",
+			ID:    "authui/Routes",
+			Entry: "http://localhost:4201",
 		},
 	}
 
-	req := httptest.NewRequest(http.MethodGet, "/api/micro-frontends", nil)
+	req := httptest.NewRequest(http.MethodGet, "/api/route-remotes", nil)
 	w := httptest.NewRecorder()
 
-	microFrontendsHandler(w, req)
+	routeRemotesHandler(w, req)
 
 	if status := w.Code; status != http.StatusOK {
-		t.Errorf("microFrontendsHandler returned wrong status code: got %v want %v", status, http.StatusOK)
+		t.Errorf("routeRemotesHandler returned wrong status code: got %v want %v", status, http.StatusOK)
 	}
 
-	var resp []MicroFrontend
+	var resp []RouteRemote
 	if err := json.NewDecoder(w.Body).Decode(&resp); err != nil {
-		t.Errorf("microFrontendsHandler returned invalid JSON: %v", err)
+		t.Errorf("routeRemotesHandler returned invalid JSON: %v", err)
 	}
 
-	if len(resp) != 1 || resp[0].Name != "example" {
-		t.Errorf("microFrontendsHandler returned unexpected body: got %v want %v", resp, []MicroFrontend{{Name: "example"}})
+	if len(resp) != 1 || resp[0].Name != "authui" {
+		t.Errorf("routeRemotesHandler returned unexpected body: got %v", resp)
+	}
+}
+
+func TestNavigationItemsHandler(t *testing.T) {
+	config.NavigationItems = []NavigationItem{
+		{
+			Path:        "users",
+			Icon:        "groups",
+			Title:       "Users",
+			Description: "Manage users",
+		},
+	}
+
+	req := httptest.NewRequest(http.MethodGet, "/api/navigation-items", nil)
+	w := httptest.NewRecorder()
+
+	navigationItemsHandler(w, req)
+
+	if status := w.Code; status != http.StatusOK {
+		t.Errorf("navigationItemsHandler returned wrong status code: got %v want %v", status, http.StatusOK)
+	}
+
+	var resp []NavigationItem
+	if err := json.NewDecoder(w.Body).Decode(&resp); err != nil {
+		t.Errorf("navigationItemsHandler returned invalid JSON: %v", err)
+	}
+
+	if len(resp) != 1 || resp[0].Title != "Users" {
+		t.Errorf("navigationItemsHandler returned unexpected body: got %v", resp)
+	}
+}
+
+func TestComponentRemotesHandler(t *testing.T) {
+	config.ComponentRemotes = []ComponentRemote{
+		{
+			Name:  "usersui",
+			ID:    "usersui/Header",
+			Entry: "http://localhost:4202",
+		},
+	}
+
+	req := httptest.NewRequest(http.MethodGet, "/api/component-remotes", nil)
+	w := httptest.NewRecorder()
+
+	componentRemotesHandler(w, req)
+
+	if status := w.Code; status != http.StatusOK {
+		t.Errorf("componentRemotesHandler returned wrong status code: got %v want %v", status, http.StatusOK)
+	}
+
+	var resp []ComponentRemote
+	if err := json.NewDecoder(w.Body).Decode(&resp); err != nil {
+		t.Errorf("componentRemotesHandler returned invalid JSON: %v", err)
+	}
+
+	if len(resp) != 1 || resp[0].Name != "usersui" {
+		t.Errorf("componentRemotesHandler returned unexpected body: got %v", resp)
 	}
 }
 
