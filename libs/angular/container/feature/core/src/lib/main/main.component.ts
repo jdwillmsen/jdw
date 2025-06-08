@@ -1,4 +1,4 @@
-import { Component, inject, OnInit } from '@angular/core';
+import { Component, inject, OnInit, Type } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { ThemePalette } from '@angular/material/core';
 import { MatDrawerMode } from '@angular/material/sidenav';
@@ -18,6 +18,8 @@ import {
   MicroFrontendService,
   VersionService,
 } from '@jdw/angular-container-data-access';
+import { loadRemote } from '@module-federation/enhanced/runtime';
+import { MatTooltip } from '@angular/material/tooltip';
 
 @Component({
   selector: 'jdw-main',
@@ -27,6 +29,7 @@ import {
     NavigationLayoutComponent,
     RouterOutlet,
     MatButton,
+    MatTooltip,
   ],
   templateUrl: './main.component.html',
   styleUrl: './main.component.scss',
@@ -42,11 +45,28 @@ export class MainComponent implements OnInit {
   isSideNavEnabled = true;
   navigationItems: NavigationItem[] = [];
   currentVersion = '';
+  headerWidgets: Type<unknown>[] = [];
   private environment: Environment = inject(ENVIRONMENT);
   private breakpointObserver: BreakpointObserver = inject(BreakpointObserver);
   private versionService: VersionService = inject(VersionService);
+
   private microFrontendService: MicroFrontendService =
     inject(MicroFrontendService);
+
+  private loadRemoteWidgets(): void {
+    this.microFrontendService.getComponentRemotes().subscribe({
+      next: (remotes) => {
+        remotes.forEach((remote) => {
+          loadRemote<any>(remote.id).then((module) => {
+            const component = module[remote.name];
+            if (component) {
+              this.headerWidgets.push(component);
+            }
+          });
+        });
+      },
+    });
+  }
 
   get currentEnv() {
     return this.environment.ENVIRONMENT;
@@ -60,14 +80,12 @@ export class MainComponent implements OnInit {
     this.versionService.getVersion().subscribe((version) => {
       this.currentVersion = version;
     });
-    this.microFrontendService.getRoutes().subscribe((routes) => {
-      const navigationItems: NavigationItem[] = routes.map((route) => ({
-        path: route.path,
-        icon: route.icon,
-        title: route.title,
-      }));
-      this.navigationItems = [...this.navigationItems, ...navigationItems];
-    });
+    this.microFrontendService
+      .getNavigationItems()
+      .subscribe((navigationItems) => {
+        this.navigationItems = [...this.navigationItems, ...navigationItems];
+      });
+    this.loadRemoteWidgets();
   }
 
   handleToggle() {

@@ -25,29 +25,28 @@ describe(MainComponent.name, () => {
         {
           provide: MicroFrontendService,
           useValue: {
-            getRoutes: () =>
+            getNavigationItems: () =>
               of([
                 {
-                  name: 'authui',
                   path: 'auth',
-                  remoteName: 'authui',
-                  moduleName: './Routes',
-                  url: 'http://localhost:4201',
                   icon: 'login',
                   title: 'Auth',
                   description:
                     'This contains sign in and sign up functionality',
                 },
                 {
-                  name: 'usersui',
                   path: 'users',
-                  remoteName: 'usersui',
-                  moduleName: './Routes',
-                  url: 'http://localhost:4202',
                   icon: 'groups',
                   title: 'Users',
                   description:
                     'This contains viewing users and managing profiles functionality',
+                },
+                {
+                  path: 'roles',
+                  icon: 'lock',
+                  title: 'Roles',
+                  description:
+                    'This contains viewing and managing roles functionality',
                 },
               ]),
           },
