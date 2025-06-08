@@ -2,6 +2,17 @@
 
 This file was generated using [@jscutlery/semver](https://github.com/jscutlery/semver).
 
+## [2.0.0](https://github.com/jdwillmsen/jdw/compare/authui-1.3.3...authui-2.0.0) (2025-06-08)
+
+
+### ⚠ BREAKING CHANGES
+
+* **authui:** add component remote
+
+### Features
+
+* **authui:** add component remote ([6536fb1](https://github.com/jdwillmsen/jdw/commit/6536fb1dc74bc0e87c67f6f9647fd44eb9a9cdb0))
+
 ## [1.3.3](https://github.com/jdwillmsen/jdw/compare/authui-1.3.2...authui-1.3.3) (2025-05-29)
 
 ## [1.3.2](https://github.com/jdwillmsen/jdw/compare/authui-1.3.1...authui-1.3.2) (2025-05-27)
