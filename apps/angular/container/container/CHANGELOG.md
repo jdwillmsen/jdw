@@ -2,6 +2,13 @@
 
 This file was generated using [@jscutlery/semver](https://github.com/jscutlery/semver).
 
+## [1.4.0](https://github.com/jdwillmsen/jdw/compare/container-1.3.3...container-1.4.0) (2025-06-08)
+
+
+### Features
+
+* **container:** add mf plugin updates ([e8bb8ca](https://github.com/jdwillmsen/jdw/commit/e8bb8caa7437f87769f3812dfd19cd6ebb9814fc))
+
 ## [1.3.3](https://github.com/jdwillmsen/jdw/compare/container-1.3.2...container-1.3.3) (2025-05-29)
 
 ## [1.3.2](https://github.com/jdwillmsen/jdw/compare/container-1.3.1...container-1.3.2) (2025-05-27)
