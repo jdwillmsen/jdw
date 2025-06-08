@@ -1,13 +1,19 @@
 <div class="dashboard-container">
   <h1 data-cy="title">Apps</h1>
-  <div class="tiles" data-cy="tiles">
-    <jdw-navigation-tile
-      *ngFor="let tile of navigationTiles"
-      [attr.data-cy]="tile.title.toLowerCase() + '-tile'"
-      [title]="tile.title"
-      [description]="tile.description"
-      [link]="tile.link"
-      class="tile"
-    />
-  </div>
+
+  @if (navigationTiles.length > 0) {
+    <div class="tiles" data-cy="tiles">
+      @for (tile of navigationTiles; track tile.title) {
+        <jdw-navigation-tile
+          [attr.data-cy]="tile.title.toLowerCase() + '-tile'"
+          [title]="tile.title"
+          [description]="tile.description"
+          [link]="tile.link"
+          class="tile"
+        />
+      }
+    </div>
+  } @else {
+    <p>No apps available</p>
+  }
 </div>

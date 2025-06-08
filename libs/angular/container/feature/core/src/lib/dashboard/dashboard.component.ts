@@ -17,14 +17,16 @@ export class DashboardComponent implements OnInit {
   navigationTiles: NavigationTile[] = [];
 
   ngOnInit() {
-    this.microFrontendService.getRoutes().subscribe((routes) => {
-      routes.forEach((route) => {
-        this.navigationTiles.push({
-          title: route.title,
-          description: route.description,
-          link: route.path,
+    this.microFrontendService
+      .getNavigationItems()
+      .subscribe((navigationItems) => {
+        navigationItems.forEach((navigationItem) => {
+          this.navigationTiles.push({
+            title: navigationItem.title,
+            description: navigationItem.description,
+            link: navigationItem.path,
+          });
         });
       });
-    });
   }
 }
