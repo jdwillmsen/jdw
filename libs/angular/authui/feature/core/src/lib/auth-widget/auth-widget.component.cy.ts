@@ -93,8 +93,18 @@ describe(AuthWidgetComponent.name, () => {
   });
 
   it('shows person icon when logged in without icon', () => {
-    const testToken =
-      'eyJhbGciOiJIUexMiJ9.eyJhdWQiOiJodHRwOi8vbG9jYWxob3N0OjgwODAiLCJuYmYiOjE3NDYwNzQzNTEsInVzZXJfaWQiOjIsInByb2ZebGVfaWQiOjEsInJvbGVzIjpbIk1BTkFHRVIiLCJVU0VSIiwiQURNSU4iXSwiaX3zIjoiaHR0cDovL2xvY2FsaG9zdDo4MDgwL2F1dGgvYXV0aGVudGljYXRlIiwianRpIjoiOWFiZjAwODItZDRiMi00ZWQwLWIwYWItZWNiNWI2OGI3M2E3Iiwic3ViIjoiamR3aWxsbXNlbkBnbWFpbC5jb20iLCJpYXQiOjE3NDYwNzQzNTEsImV4cCI6MTc0NjA4MTU1MX0.czjiMh3IUGiDjXrfeGVXGdLVOBBIEc1giHuc4qMRbuykoHv9E4r0BNPFme2vwZ7rQUGlYV5WLgqbr8ee9zGbjA';
+    const mockUser: User = {
+      id: 1,
+      emailAddress: 'user@jdwkube.com',
+      password: 'P@ssw0rd',
+      status: 'ACTIVE',
+      roles: [],
+      profile: null,
+      createdByUserId: 1,
+      createdTime: '2024-08-09T01:02:34.567+00:00',
+      modifiedByUserId: 1,
+      modifiedTime: '2024-08-09T01:02:34.567+00:00',
+    };
     cy.mount(AuthWidgetComponent, {
       providers: [
         {
@@ -103,6 +113,14 @@ describe(AuthWidgetComponent.name, () => {
             token$: token$,
             getToken: () => testToken,
             signOut: () => '',
+            isTokenExpired: () => false,
+            getUserIdFromToken: () => 1,
+          },
+        },
+        {
+          provide: UsersService,
+          useValue: {
+            getUser: (userId: number | string) => of(mockUser),
           },
         },
       ],
