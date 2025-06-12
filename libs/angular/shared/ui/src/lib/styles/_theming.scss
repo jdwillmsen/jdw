@@ -18,30 +18,22 @@
   $error: mat.$m2-red-palette,
   $info: mat.$m2-blue-palette,
   $create-light-theme: true,
-  $typography: mat.m2-define-typography-config(),
+  $typography: mat.define-typography(),
   $density: 0
 ) {
   $theme: null;
 
   @if ($create-light-theme) {
-    $color-config: (
-      primary: $primary,
-      accent: $accent,
-      warn: $error,
-    );
+    $color-scheme: light;
     $theme: mat.m2-define-light-theme(
       (
-        color: $color-config,
+        color: mat.$violet-palette,
         typography: $typography,
         density: $density,
       )
     );
   } @else {
-    $color-config: (
-      primary: $primary,
-      accent: $accent,
-      warn: $error,
-    );
+    $color-scheme: dark;
     $theme: mat.m2-define-dark-theme(
       (
         color: $color-config,
