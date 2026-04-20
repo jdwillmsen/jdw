@@ -2,85 +2,40 @@
 
 /// Defines a theme with success, error, warn, and info colors.
 /// @param {Map} $primary The primary color palette.
-/// @param {Map} $accent The accent color palette.
+/// @param {Map} $secondary The $secondary color palette.
+/// @param {Map} $tertiary The tertiary color palette.
+/// @param {Map} $info The info color palette.
 /// @param {Map} $warn The warn color palette.
 /// @param {Map} $success The success color palette.
 /// @param {Map} $error The error color palette.
-/// @param {Map} $info The info color palette.
-/// @param {Boolean} $create-light-theme If true a light theme is created, otherwise a dark theme is created
-/// @param {Boolean} $typography The typography config
-/// @param {Boolean} $density The density config
+/// @param {Map} $typography The typography config
+/// @param {Number|Map} $density The density config
 @function define-theme(
   $primary,
-  $accent,
-  $warn: mat.$m2-orange-palette,
-  $success: mat.$m2-green-palette,
-  $error: mat.$m2-red-palette,
-  $info: mat.$m2-blue-palette,
-  $create-light-theme: true,
+  $secondary,
+  $tertiary,
+  $info: mat.$blue-palette,
+  $warn: mat.$yellow-palette,
+  $success: mat.$green-palette,
+  $error: mat.$red-palette,
   $typography: mat.define-typography(),
   $density: 0
 ) {
-  $theme: null;
-
-  @if ($create-light-theme) {
-    $color-scheme: light;
-    $theme: mat.m2-define-light-theme(
-      (
-        color: mat.$violet-palette,
-        typography: $typography,
-        density: $density,
-      )
-    );
-  } @else {
-    $color-scheme: dark;
-    $theme: mat.m2-define-dark-theme(
-      (
-        color: $color-config,
-        typography: $typography,
-        density: $density,
-      )
-    );
-  }
-
-  $extra: (
-    success: $success,
-    error: $error,
-    info: $info,
-    warn: $warn,
-  );
-  @return map-merge($theme, $extra);
-}
-
-@function define-palette(
-  $base-palette,
-  $default: 500,
-  $lighter: 100,
-  $darker: 700,
-  $extra-light: 50,
-  $extra-dark: 900,
-  $text: $default
-) {
-  $new-palette: mat.m2-define-palette(
-    $base-palette,
-    $default,
-    $lighter,
-    $darker,
-    $text: $default
+  $color-config: (
+          primary: $primary,
+          secondary: $secondary,
+          tertiary: $tertiary,
+          info: $info,
+          error: $error,
+          warnings: $warn,
+          success: $success,
   );
 
-  $extra-palette: (
-    extra-light: map-get($base-palette, $extra-light),
-    extra-dark: map-get($base-palette, $extra-dark),
-    extra-light-contrast: mat.m2-get-contrast-color-from-palette(
-        $base-palette,
-        $extra-light
-      ),
-    extra-dark-contrast: mat.m2-get-contrast-color-from-palette(
-        $base-palette,
-        $extra-dark
-      ),
+  $theme-config: (
+          color: $color-config,
+          typography: $typography,
+          density: $density
   );
 
-  @return map-merge($new-palette, $extra-palette);
+  @return $theme-config;
 }

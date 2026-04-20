@@ -1,0 +1,26 @@
+@use '@angular/material' as mat;
+@use '../all-themes';
+@use '../theming';
+@use '../palette';
+
+$theme-primary: palette.$red-teal_palettes;
+$theme-secondary: palette.$red-teal_palettes;
+$theme-tertiary: palette.$red-teal_palettes;
+$theme-warn: mat.$orange-palette;
+$theme-success: mat.$green-palette;
+$theme-error: mat.$red-palette;
+$theme-info: mat.$blue-palette;
+$theme-typography: mat.define-typography();
+$theme-density: 0;
+$theme: theming.define-theme(
+                $theme-primary,
+                $theme-secondary,
+                $theme-tertiary,
+                $theme-info,
+                $theme-warn,
+                $theme-success,
+                $theme-error,
+                $theme-typography,
+                $theme-density
+);
+@include all-themes.all-component-themes($theme);

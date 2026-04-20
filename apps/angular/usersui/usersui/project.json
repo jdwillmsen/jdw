@@ -51,8 +51,8 @@
           },
           {
             "inject": false,
-            "input": "libs/angular/shared/ui/src/lib/styles/themes/black-white.scss",
-            "bundleName": "black-white"
+            "input": "libs/angular/shared/ui/src/lib/styles/themes/red-teal.scss",
+            "bundleName": "red-teal"
           },
           {
             "inject": false,
