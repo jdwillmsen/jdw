@@ -1,3 +1,13 @@
+# ⚠️ Archived
+
+This repository has been **archived** and is no longer maintained.
+
+All active development has moved to:
+
+**→ [github.com/jdwlabs/apps](https://github.com/jdwlabs/apps)**
+
+Please use that repository for the latest code, issues, and contributions.
+
 # JDW Monorepo
 
 [![CI](https://github.com/jdwillmsen/jdw/actions/workflows/ci.yml/badge.svg)](https://github.com/jdwillmsen/jdw/actions/workflows/ci.yml)
